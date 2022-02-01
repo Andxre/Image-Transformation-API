@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express"
+import { Request, Response } from "express"
 import sharp from "sharp";
 import ConversionHandler from "./handlers/ConversionHandler";
 import Handler from "./handlers/handler";
@@ -10,6 +10,7 @@ const operationFactory = new OperationFactory();
 const imageHandlerFactory = new ImageHandlerFactory();
 
 export default function transform (req: Request, res: Response) {
+    // Use middleware to validate request
     const image = req.body.image;
     const operations: string[] = req.body.operations;
 
@@ -18,6 +19,8 @@ export default function transform (req: Request, res: Response) {
     }
 
     const buff: Buffer = Buffer.from(image, 'base64');
+
+
     const obj: sharp.Sharp = sharp(buff);
     const operationList: Operation[] = [];
 
@@ -25,6 +28,7 @@ export default function transform (req: Request, res: Response) {
         operationList.push(operationFactory.getOperation(operation));
     })
 
+    // Could make this its own method - createHandler(operationList: Operation[]): ImageHandler
     let startingHandler: Handler = new ConversionHandler();
     let prev: Handler = startingHandler;
 
@@ -37,12 +41,12 @@ export default function transform (req: Request, res: Response) {
     
         prev = h;
     }
-    
+
     let buffer = startingHandler.handle(obj)
     buffer.then(data => {
-        res.json(data.toString('base64'));
+        res.status(200).send({ data: data.toString('base64') });
+    }).catch(err => {
+        res.json({ error: "Invalid Image Input."})
     })
-    
-
 
 }
