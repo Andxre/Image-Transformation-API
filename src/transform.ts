@@ -1,52 +1,42 @@
-import { Request, Response } from "express"
-import sharp from "sharp";
-import ConversionHandler from "./handlers/ConversionHandler";
-import Handler from "./handlers/handler";
-import ImageHandlerFactory from "./handlers/ImageHandlerFactory";
-import { Operation } from "./operations/Operation";
-import OperationFactory from "./operations/OperationFactory";
+import { NextFunction } from 'express';
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import  OperationValidator  from './validators/OperationValidator';
+import  ImageValidator  from './validators/ImageValidator';
+import  CommandFactory  from './commands/CommandFactory';
 
-const operationFactory = new OperationFactory();
-const imageHandlerFactory = new ImageHandlerFactory();
-
-export default function transform (req: Request, res: Response) {
-    // Use middleware to validate request
-    const image = req.body.image;
-    const operations: string[] = req.body.operations;
-
-    if (operations.length == 0) {
-        res.json("Operations field cannot be empty");
+export default async function transform (req: Request, res: Response, next: NextFunction) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(
+          { 
+            message: "Request body validation error", 
+            errors: errors.array() 
+        });
     }
 
-    const buff: Buffer = Buffer.from(image, 'base64');
+    const imageValidator = new ImageValidator();
+    const operationValidator = new OperationValidator();
+    const commandFactory = new CommandFactory();
 
+    const {image, operations} = req.body;
 
-    const obj: sharp.Sharp = sharp(buff);
-    const operationList: Operation[] = [];
-
-    operations.forEach((operation: string) => {
-        operationList.push(operationFactory.getOperation(operation));
-    })
-
-    // Could make this its own method - createHandler(operationList: Operation[]): ImageHandler
-    let startingHandler: Handler = new ConversionHandler();
-    let prev: Handler = startingHandler;
-
-    while (operationList.length > 0) {
-        let operation: Operation = operationList.shift();
-    
-        let h = imageHandlerFactory.getHandler(operation);
-    
-        prev.setNext(h);
-    
-        prev = h;
+    try {
+        imageValidator.validate(image);
+    } catch (err) {
+        return next(err);
     }
 
-    let buffer = startingHandler.handle(obj)
-    buffer.then(data => {
-        res.status(200).send({ data: data.toString('base64') });
-    }).catch(err => {
-        res.json({ error: "Invalid Image Input."})
+    console.time('start')
+    let buff: Buffer = Buffer.from(image, 'base64');
+
+    for (let i = 0; i < operations.length; i++) {
+        buff = await commandFactory.getCommand(operations[i]).execute(buff);
+    }
+    console.timeEnd('start')
+
+    res.status(200).send({
+        data: buff.toString('base64')
     })
 
 }

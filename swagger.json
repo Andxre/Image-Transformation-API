@@ -1,0 +1,131 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Image Transformation API",
+    "description": "Andre Dasalla - An API to perform transformations on images",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/image": {
+      "post": {
+        "summary": "Returns base64 encoded transformed image",
+        "description": "This endpoint takes in a base64 image string and an array of operations",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "byte",
+                    "example": "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"
+                  },
+                  "operations": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": ["rotate left", "thumbnail", "grayscale"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Base64 encoded transformed image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "format": "byte",
+                      "example": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFiUlEQVR4nO2d50szSxTG3z9zU157wQYKFhQbQVCUYIsFRQUjWLGEfBDLF2MQFUVFEEJcAxFTMGqIkpjdmblc986yN7EkMdnM7O7zQRQlJD/OPJ5z5szsH6TpQ/yHEELBYNBisfh8PoQQhBBJ9Ef6gzoFPiTwWlxcNBgMOp2OZVnhV9K/VDssAIAQPg6Ho6ysjPmQXq93u90arP8EIeQ4TsDEsmxTU5OASafTCV81WIn29Pz8PDAwIACSSoP1ryCEgg1xHLe2tvb3798ETBqsRHs6OjoqLy//FJPaYcEPexI+NsuybW1tUnvSYH1iT+FweGRkRAT0DSk1RhbE9sTz/MbGRkFBwTd0VA0LYHs6OzurqqpKHZOKYEGJPd3f33d2dqay6NQIi8f2FIlEJicnDQZDZqQUDgtie0IIbW9vFxYWpktHLbAAtqfLy8uamppfYlIsLA7bUyAQ6OnpyWC5qQIWAIDjOIRQLBabmZn5jT0pGRaEUHBxhNDe3l5JSUlW6CgQFsD2dHNzU19fnwtMSoDF87zwvoPBYG9vbxbtSVGwgMSeFhYWjEaj+Hk0WInZk9jzLS0tzWk0URxZAG8i3N7eNjc3y4aJMlg8tqdwODw4OKjX62UmRQcsAICQFvA8v7q6KvZ8c23n9MEC2J5OT08zaKqoBRbA9uT1eltbWxkCRCIsXtJUmZiYEKuWvIssWABnTwAAu90uNlXktyfSYQFsT1dXV9XV1Qx5IgIWxF06n8/X3d3NkKo8w+KxPUWj0dnZWXLsiSxYANsThHBnZ6e4uFh8Qwypyg8snucFe3K5XA0NDQwlkhsWwNlTKBSSoalCKywe21M8Hl9cXPxqUkXtsKBkQszhcIiTKnSFlRywAF53LMu2tLQwNCuHsADG9PLyMjQ0lJemCgWwAG6qAAA2NzfFSRXq1l1uYUGJPUmbKrRjyj4sHjczfT5fR0cHozhlBxbExV00Gp2enlaAPeUEFsBVC0KIlqolP7DEEYzr6+u6ujrxFRmFKkNY4v+7UCjU19enYEC/giWOYHAcJ90KVoPSgCVgEtICp9NZUVEhvgSjDqUHCyHk8Xhor1pkWoZms5lRsXRpwbLb7UVFRYxapUt3GUaj0bGxMaWmndmMLDGx8nq9qZwMUpgyybPEDb7Dw0M5x6NoTUqlx4WsVivhW1hElDtiWz0QCJhMJkbp+m0hDSUNrIuLC/EsgyKNLMstGgihzWajcedG7uYfwE33cDg8PDysvPQi+z14HhuZ2+1ubGxkFKQcbljApBs3aDeyHG6FQWxksVhsfn5eAemFfJuswWCQ9vRCplkHTpJe1NbWMnRKvsEQQPa8KIkjRxAbWSQSGR0dpYhU3obZADYyj8dDyIw70WOSUFInOZ1OKuaQSBnA5ThuaWkpj+dy6BvtDoVC/f39ZJIiBVZCT9HlcuX0qLMSYCFsZML3+/v74iF6QmKNLFjJJwnm5ubIqZNIhJWQXvj9fpPJREJwkQsr+fRT3usk0mGh/4+A2Wy2PNZJFMBKMLLX11fpNVgaLELPAlMTWZ9OPp2cnFRWVmqwUIqjh/F4fGVlRZ46ib7I+nSY/OnpyWw2axf3pGFkbrdbvGdbi6yUjOzg4EDcT9KW4c9G9v7+brVas35PFN2e9f0QWdZvIFMgrIQ6SXqgQYOVkpHt7u7+fhpWsZGVbGRvb29TU1PadcFpXET98PDQ1dUlRooWWT8b2fn5eQZ3CCt/GX61OQIA2Nra0i7PT++xDBaLRXssQxpG5vF42tvbfzQy1S3Db4zs+PhYe5TMz5KO9a+vr2sPKUrPyMxmc/IAsbYMvzSyu7s78ZJd7cFqKRmZdMJHe2Tfzz1FAMDy8rLRaNQeBom+l2hkj4+P4+Pjfr8/+TGj/wBEe3tH0pjcdAAAAABJRU5ErkJggg=="
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User input error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ImageError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/OperationError"
+                    }
+                  ]
+                },
+                "examples": {
+                  "ImageError": {
+                    "value": {
+                      "error": "invalid image input"
+                    }
+                  },
+                  "OperationError": {
+                    "value": {
+                      "error": "'{operation}' is not a valid operation"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ImageError": {
+        "description": "Invalid base64 string",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "invalid image input"
+          }
+        }
+      },
+      "OperationError": {
+        "description": "Invalid Operation",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "invalid operation"
+          }
+        }
+      },
+      "operations": {
+        "description": "These are the available operations to perform on images. They are case-sensitive. n = degrees, x = width, y = height",
+        "type": "string",
+        "enum": [
+          "thumbnail",
+          "grayscale",
+          "rotate left",
+          "rotate right",
+          "rotate {n}",
+          "flip vertical",
+          "flip horizontal",
+          "resize {x} {y}"
+        ]
+      }
+    }
+  }
+}
