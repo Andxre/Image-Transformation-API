@@ -1,16 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
 import swaggerUi from 'swagger-ui-express'
-import transformOld from "./transformOld";
 import transform from "./transform";
 import ajv from "ajv";
 import fs from 'fs';
 const swaggerDoc = require('../swagger.json');
-import { body } from 'express-validator';
-
 
 const app = express();
 const port = 8080; 
 
+// JSON Schema Validator
 const schema = JSON.parse(fs.readFileSync('./schema.json').toString())
 const Ajv = ajv();
 const validate = Ajv.compile(schema);
@@ -25,30 +23,10 @@ function validateBody(req: Request, res: Response, next: NextFunction) {
     next();
 }
 
-
-app.use(express.json({limit: '8mb'})); 
+app.use(express.json({limit: '7mb'})); // 2 mb excess for operation data
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
-/*
-Make sure Resize or Thumbnail commands get executed last!
- This increases performance by a lot!
-*/
 app.post("/transform", validateBody, transform)
-
-app.post(
-    "/transformold",
-    body('image')
-        .exists()
-        .withMessage('missing image field')
-        .isBase64()
-        .withMessage('image must be base64 encoded'),
-    body('operations')
-        .exists()
-        .withMessage('missing operations field')
-        .isArray({ min: 1, max: 6})
-        .withMessage('Operations should be at least 1 and at most 6'),
-    transformOld)
-
 
 // Error Handling Middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

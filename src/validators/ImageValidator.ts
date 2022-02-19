@@ -18,6 +18,3 @@ export default class ImageValidator {
         throw new Error('Invalid file type. Base64 image string must be png or jpg.')
     }
 }
-
-// Singleton Instance
-//export let imageValidator = new ImageValidator();
