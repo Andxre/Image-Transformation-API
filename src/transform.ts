@@ -1,7 +1,7 @@
-import e, { NextFunction } from 'express';
+import { NextFunction } from 'express';
 import { Request, Response } from 'express';
-import  ImageValidator  from './validators/ImageValidator';
-import  CommandFactory  from './commands/CommandFactory';
+import ImageValidator  from './validators/ImageValidator';
+import CommandFactory  from './commands/CommandFactory';
 import ImageProcessor from './commands/ImageProcessor';
 
 export default async function transform (req: Request, res: Response, next: NextFunction) {
