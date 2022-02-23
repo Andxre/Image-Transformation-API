@@ -10,3 +10,13 @@ npm install
 npm start
 ```
 
+## Using the client
+The only python prerequisite is Requests.
+```
+cd client
+
+pip install -r requirements.txt
+
+python client.py
+
+```

@@ -2,8 +2,18 @@ import uuid
 import requests
 import base64
 
+# API Endpoint
 url = "http://localhost:8080/transform"
+# Set of Parameters that should be casted to int 
 intParams = {"angle", "width", "height"}
+# Map of Operations and their parameters
+operations = {
+    "thumbnail": [],
+    "grayscale": [],
+    "flip": ["orientation: string - Allowed Values {vertical, horiontal}"],
+    "rotate": ["angle: int"],
+    "resize": ["width: int", "height: int"]
+}
 
 def main():
     requestBody = {
@@ -12,7 +22,12 @@ def main():
      }
 
     file = input("Enter file name: ")
-    requestBody["image"] = encode(file)
+    try:
+        requestBody["image"] = encode(file)
+    except Exception:
+        print("Invalid Image! Make sure the image is located in the same folder.")
+        return
+
     opCount = 999
     while (opCount > 6):
         opCount = int(input("How many operations would you like to perform? (6 max): "))
@@ -21,23 +36,19 @@ def main():
         operation = {
             "operation": ""
         }
+        print("Operations: " + str(list(operations.keys())))
         inp = input("Enter operation: ")
+        if (inp not in operations): raise Exception("Invalid Operation")
         operation["operation"] = inp
-        param = input("Does this operation have parameters?: ")
 
-        if (param == "yes"):
+        if (len(operations[inp]) != 0):
             operation["parameters"] = {}
-        
-            cont = "yes"
-            while (cont != "no"):
-                key = input("Input parameter name: ")
-                val = input("Input parameter value: ")
-
-                if (key in intParams): val = int(val)
-
-                operation["parameters"][key] = val
-
-                cont = input("Would you like to add another parameter? (yes/no): ")
+            for i in range(len(operations[inp])):
+                parameter, info = operations[inp][i].split(':')
+                print("Type: " + info)
+                val = input(parameter + ": ")
+                if (parameter in intParams): val = int(val)
+                operation["parameters"][parameter] = val
 
         requestBody["operations"].append(operation)
 
