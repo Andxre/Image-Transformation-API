@@ -31,11 +31,13 @@ def main():
     opCount = 999
     while (opCount > 6):
         opCount = int(input("How many operations would you like to perform? (6 max): "))
-
+    
+    print()
     for _ in range(opCount):
         operation = {
             "operation": ""
         }
+        print("------------------------------------------------------------------")
         print("Operations: " + str(list(operations.keys())))
         inp = input("Enter operation: ")
         if (inp not in operations): raise Exception("Invalid Operation")
@@ -62,7 +64,7 @@ def main():
     else:
         imageData = json['data']
         filename = decode(imageData)
-        print("Image Transformed: " + filename)
+        print("\nImage Transformed: " + filename)
 
 
 def encode(path):
