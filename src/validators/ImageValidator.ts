@@ -1,4 +1,5 @@
 import isBase64 from 'validator/lib/isBase64';
+import ValidationError from './ValidationError';
 
 export default class ImageValidator {
     private mimeTypes: string[] = ["/9j/", "iVBORw0KGgo"]; 
@@ -7,7 +8,11 @@ export default class ImageValidator {
 
     public validate(image: string) {
         if (!isBase64(image)) {
-            throw new Error('Image string must be base64 encoded.')
+            throw new ValidationError(
+                'Image Error',
+                'Image string must be base64 encoded.',
+                1001
+            );
         }
 
         for (let i of this.mimeTypes) {
@@ -15,6 +20,10 @@ export default class ImageValidator {
                 return true;
             }
         }
-        throw new Error('Invalid file type. Base64 image string must be png or jpg.')
+        throw new ValidationError(
+            'Image Error',
+            'Invalid file type. Base64 image string must be png or jpg.',
+            1002
+        );
     }
 }

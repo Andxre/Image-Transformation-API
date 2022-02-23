@@ -15,6 +15,6 @@ export default class ResizeCommand implements Command {
     }
 
     execute(buffer: Buffer): Promise<Buffer> {
-        return sharp(buffer).resize(this.width, this.height).toBuffer();
+        return sharp(buffer).resize({width: this.width, height: this.height}).toBuffer();
     }
 }

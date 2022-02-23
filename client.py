@@ -1,10 +1,9 @@
-from email.mime import base
-from multiprocessing.sharedctypes import Value
 import uuid
 import requests
 import base64
 
-url = "http://localhost:8080/test"
+url = "http://localhost:8080/transform"
+intParams = {"angle", "width", "height"}
 
 def main():
     requestBody = {
@@ -13,15 +12,12 @@ def main():
      }
 
     file = input("Enter file name: ")
-
-    with open('out.txt', "w") as f:
-        f.write(encode(file))
-
     requestBody["image"] = encode(file)
+    opCount = 999
+    while (opCount > 6):
+        opCount = int(input("How many operations would you like to perform? (6 max): "))
 
-    opCount = int(input("How many operations would you like to perform? (6 max): "))
-
-    for i in range(opCount):
+    for _ in range(opCount):
         operation = {
             "operation": ""
         }
@@ -36,17 +32,17 @@ def main():
             while (cont != "no"):
                 key = input("Input parameter name: ")
                 val = input("Input parameter value: ")
+
+                if (key in intParams): val = int(val)
+
                 operation["parameters"][key] = val
 
-                cont = input("Would you like to add more? (yes/no): ")
-            
+                cont = input("Would you like to add another parameter? (yes/no): ")
 
         requestBody["operations"].append(operation)
 
     r = requests
     response = r.post(url, json = requestBody)
-
-    print("Response Time: " + str((response.elapsed.total_seconds() * 1000).__round__(1)) + "ms")
 
     json = response.json()
 
@@ -69,6 +65,7 @@ def decode(imageData):
         fh.write(base64.b64decode(imageData))
     return filename
 
-
 if __name__ == "__main__":
     main()
+
+
