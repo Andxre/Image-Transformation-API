@@ -60,7 +60,8 @@ def main():
     json = response.json()
 
     if ("error" in json):
-        print("Error: {}".format(json['error']))
+        print("errorCode: {}".format(json['errorCode']))
+        print("error: {}".format(json['error']))
     else:
         imageData = json['data']
         filename = decode(imageData)
