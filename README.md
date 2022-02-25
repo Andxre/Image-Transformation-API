@@ -17,7 +17,9 @@ Server must be running before running the client.
 - Requests
 
 ### What it does?
-The python client takes care of encoding and decoding the base64 image string. Ensure that the target image file is in the same directory as `client.py`
+The python client takes care of encoding an image into base64, and decoding 
+the return image string back into a file. 
+Ensure that the target image file is in the same directory as `client.py`
 
 
 ### Usage
